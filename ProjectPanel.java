@@ -100,11 +100,12 @@ public class ProjectPanel extends JPanel
       public void actionPerformed(ActionEvent actionEvent)
       {
            
-           
+         //gravity code
          if(!(p.isOnGround(numArray)) && (int)jump == 0)
           {
                timerCount++;
              
+               //Every 20 timer clicks N will increment by 1 
                if(timerCount % 20 == 0)
                {
                        if(N < 7) 
@@ -112,12 +113,14 @@ public class ProjectPanel extends JPanel
                             N++;
                        }
                 }
-                           
+                
+                //for loop that will move and repaint the player object as if it is gravity          
                 for(int i=0; i< N; i++)
                 {
                      p.move(0, 1, numArray);
                      repaint();
                      
+                     //if it on ground will check if it collides with a victory block if not will set N to 0 and timer count back to 0
                      if(p.isOnGround(numArray))
                      {
                         if( p.getVictory())
@@ -139,7 +142,7 @@ public class ProjectPanel extends JPanel
 
 
      
-     
+          //if the A key is pressed will move the player block to the left and then check if it collides with a victory block
           if(Akey)
           {
              p.move(-1,0,numArray);
@@ -150,6 +153,7 @@ public class ProjectPanel extends JPanel
                 System.exit(0);
              }
           }
+          //if the D key is pressed will move the player block to the right and then check if it collides with a victory block
           if(Dkey)
           {
              p.move(1,0,numArray);
@@ -161,8 +165,10 @@ public class ProjectPanel extends JPanel
              }
 
           }
+          //if the W key is pressed will make the player jump up 
           if (Wkey) 
           {
+             
              if(p.isOnGround(numArray))
              {
                  jump = 7;
@@ -177,6 +183,7 @@ public class ProjectPanel extends JPanel
              {
                 if(!p.move(0, -1, numArray))
                 {
+                   //if get victory returns true it will show message victory and exit progam
                    if(p.getVictory())
                    {
                          JOptionPane.showMessageDialog(null, "Victory!!!");
@@ -195,15 +202,18 @@ public class ProjectPanel extends JPanel
        public void keyTyped(KeyEvent e){ }
        
        public void keyReleased(KeyEvent e)
-       {
+       { 
+           //If Akey is released will set it to false
            if(e.getKeyCode() == KeyEvent.VK_A)
            {
                Akey = false;
            }
+           //If Dkey is released will set it to false
            if(e.getKeyCode() == KeyEvent.VK_D)
            {
                Dkey = false;
            }
+           //If Wkey is released will set it to false
            if(e.getKeyCode() == KeyEvent.VK_W)
            {
                Wkey = false;
@@ -212,15 +222,18 @@ public class ProjectPanel extends JPanel
        }
        
        public void keyPressed(KeyEvent e)
-       {
+       { 
+           // If Akey is pressed will set it to true
            if(e.getKeyCode() == KeyEvent.VK_A)
            {
                Akey = true;
            }
+            // If Dkey is pressed will set it to true
            if(e.getKeyCode() == KeyEvent.VK_D)
            {
                Dkey = true;
            }
+            // If Wkey is pressed will set it to true
            if(e.getKeyCode() == KeyEvent.VK_W)
            {
                Wkey = true;
@@ -235,43 +248,46 @@ public class ProjectPanel extends JPanel
       protected int ypos;
       protected Color col = Color.BLACK;
      
-     
+      //Pass in the x and y pos and color of the game object
       public GameObject(int x, int y, Color c)
       {
           xpos = x;
           ypos = y;
           col = c;
       }
-     
+      //method to get x
       public int getx()
       {
          return xpos;
       }
-     
+      // method to get y
       public int gety()
       {
          return ypos;
       }
-     
+      // method to set x
       public void setX(int x)
       {
           xpos = x;
       }  
-     
+      // method to set y
       public void setY(int y)
       {
           ypos = y;
       }  
      
-     
+      // method to get color
       public Color getColor()
       {
          return col;
       }
      
-     
+      // method collides
       public boolean collides(GameObject other)
-      {
+      { 
+        // Returns a boolean, takes in GameObject as a parameter
+        // if this object is the same as the parameter return false
+
          if(this == other)
          {
              return false;
@@ -302,7 +318,7 @@ public class ProjectPanel extends JPanel
    public class Player extends GameObject
    { 
       private boolean victory = false;
-      
+      //pass in x and y position and color for the player object
       public Player(int x, int y, Color c)
       {
          super(x, y, c);
@@ -310,8 +326,9 @@ public class ProjectPanel extends JPanel
  
       public boolean isOnGround(ArrayList<ArrayList<GameObject>> numArray)
       {
+        //increase y position by one
          ypos++;
-         
+         //if collides is true decrease y position by one and return true
          if(collides(numArray))
          {
              ypos--;
@@ -321,6 +338,7 @@ public class ProjectPanel extends JPanel
          return false;
       }
      
+      //method that returns if victory is true or not
       public boolean getVictory()
       {
          return victory;
@@ -328,9 +346,10 @@ public class ProjectPanel extends JPanel
    
       public boolean move(int x, int y, ArrayList<ArrayList<GameObject>> numArray)
       {
+            //will add x and y to xpos and ypos and 
             xpos = x + xpos;
             ypos = y + ypos;
-           
+            //if collides is true will minus x and y from position so it doesnt move and will return false
             if(collides(numArray))
             {
                 xpos = xpos - x;
@@ -341,20 +360,23 @@ public class ProjectPanel extends JPanel
       }
      
       public boolean collides(ArrayList<ArrayList<GameObject>> numArray)
-      {
+      { 
+          // get the index postion of where the block is the array list
           int fx = Math.floorDiv(xpos - 12, 25);
           int fy = Math.floorDiv(ypos - 12, 25);
          
-                  
+          //create a temp game object    
           GameObject temp;
          
-          temp = numArray.get(fy).get(fx);
           
+          temp = numArray.get(fy).get(fx);
+          //check if temp is equal to null
           if(temp != null)
           {
+              //check if temp collides with anything
               if(super.collides(temp))
               { 
-               
+                 //compare the colors and if it equals green set victory to true
                  if(temp.getColor().equals(Color.GREEN))
                  {
                      victory = true;
@@ -365,12 +387,13 @@ public class ProjectPanel extends JPanel
           }
          
           temp = numArray.get(fy + 1).get(fx);
+           //check if temp is equal to null
           if (temp != null)
           {
-          
+              //check if temp collides with anything
               if(super.collides(temp))
               { 
-               
+                 //compare the colors and if it equals green set victory to true
                  if(temp.getColor().equals(Color.GREEN))
                  {
                      victory = true;
@@ -381,11 +404,14 @@ public class ProjectPanel extends JPanel
           }
          
           temp = numArray.get(fy).get(fx + 1);
+          //check if temp is equal to null
           if (temp != null)
-          {
+          { 
+              //check if temp collides with anything
               if(super.collides(temp))
               {
-                  if(temp.getColor().equals(Color.GREEN))
+                 //compare the colors and if it equals green set victory to true
+                 if(temp.getColor().equals(Color.GREEN))
                  {
                      victory = true;
                     
@@ -395,10 +421,13 @@ public class ProjectPanel extends JPanel
           }
          
           temp = numArray.get(fy + 1).get(fx + 1);
+          //check if temp is equal to null
           if(temp != null)
           {
+              //check if temp collides with anything
               if(super.collides(temp))
               {
+                  //compare the colors and if it equals green set victory to true
                   if(temp.getColor().equals(Color.GREEN))
                   {
                      victory = true;
@@ -415,6 +444,7 @@ public class ProjectPanel extends JPanel
    
     public class Block extends GameObject
     {
+        //pass in the x and y pos and set color to blue
         public Block(int x, int y)
         {
           super(x, y, Color.BLUE);
@@ -424,6 +454,7 @@ public class ProjectPanel extends JPanel
    
     public class VictoryBlock extends GameObject
     {
+        //pass in the x and y pos and set color to green
         public VictoryBlock(int x, int y)
         {
           super(x, y, Color.GREEN);
@@ -437,7 +468,7 @@ public class ProjectPanel extends JPanel
    {      
                    
        super.paintComponent(g);
-       
+       //loop through the array list and draw each object 
        for(int i = 0; i < numArray.size(); i++)
        {
            ArrayList<GameObject> innerList  = numArray.get(i);

@@ -17,12 +17,15 @@ public class ProjectFrame extends JFrame
    {
       super("Project");
       
+      //add panel to frame
       contents.add(new ProjectPanel());  
         
+      //black border that goes around the frame
       getRootPane().setBorder(BorderFactory.createMatteBorder(10, 10, 10, 10, Color.BLACK));
+      //set size of frame
       setSize(834,657); 
       
-
+      //set visible
       setVisible(true);      
    }
    
